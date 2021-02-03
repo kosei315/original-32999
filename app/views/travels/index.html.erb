@@ -1,0 +1,61 @@
+<section class="hero is-success">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title">
+        観光リスト
+      </h1>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="columns is-multiline">
+      <% @travels.each do |travel| %>
+        <div class="column is-4">
+          <div class="card">
+            <div class="card-image">
+              <figure class="image is-4by3">
+                <%= link_to travel_path(travel) do %>
+                  <%#<%= image_tag travel.image, class: 'travel-image' if travel.image.attached? %>
+                  <%= attachment_image_tag travel, :image,format: 'jpeg', size: "100x100" %>
+                <% end %>
+              </figure>
+            </div>
+            <div class="card-content">
+              <div class="media">
+                <div class="media-left">
+                  <figure class="image is-48x48">
+                    <%#<%= image_tag travel.image, class: 'message-image' if travel.image.attached? %>
+                    <%#<%= attachment_image_tag travel.user, :profile_image, fallback: "no-image.png",format: 'jpeg', size: "100x100", class: "profile_image" %>
+                    <%= attachment_image_tag travel.user, :profile_image, :fill, 100, 100, format: 'jpeg', fallback: "no-image.png",size: "400x400" %>
+                  </figure>
+                </div>
+                <div class="media-content">
+                  <div class="title"><%=link_to travel.user.username, user_path(travel.user) %></div>
+                </div>
+              </div>
+
+              <div class="content">
+                <time><%= travel.updated_at.strftime("%Y-%m-%d %H:%M") %></time>更新
+
+                <%# いいね機能の実施　%>
+                <% if current_user.already_favorited?(travel) %>
+                  <%= link_to travel_favorites_path(travel), method: :delete do %>
+                    <i class="fas fa-heart"></i>
+                  <% end %>
+                  <%= travel.favorites.count %>
+                <% else %>
+                  <%= link_to travel_favorites_path(travel), method: :post do %>
+                    <i class="far fa-heart"></i>
+                  <% end %>
+                  <%= travel.favorites.count %>
+                  <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
